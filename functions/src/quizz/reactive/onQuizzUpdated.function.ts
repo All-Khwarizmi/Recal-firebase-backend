@@ -12,6 +12,7 @@ export default functions.firestore
         questionSnapshot.data()['question']
       } from the quizz ${context.params.quizzId}, ${context.params.questionId}`
     );
+    
     // Get users ref
     const usersRef = db.collection('users');
 

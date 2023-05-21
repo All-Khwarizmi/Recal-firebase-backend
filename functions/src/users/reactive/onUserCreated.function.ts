@@ -2,16 +2,36 @@ import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
 
 const db = admin.firestore();
+const logInfo = functions.logger.info;
 
+/**
+ * On user created add it to category
+ *
+ */
 export default functions.firestore
   .document('users/{userId}')
   .onCreate(async (userSnapshot, context) => {
+    const { name, id, classId } = userSnapshot.data();
+    logInfo(`${name}, ${id}, ${classId}`);
     const data = userSnapshot.data();
-    const category = await db
+
+    // Get the quizzes
+    const quizzes = await db
+      .collection('quizz')
+      .where('classId', '==', classId)
+      .get();
+
+    // Update user with quizzes
+    quizzes.docs.forEach((doc) => {
+      userSnapshot.ref.collection('todoQuizz').add(doc.data());
+    });
+
+    // Add to category
+    await db
       .collection('category')
-      .doc(data.classId)
+      .doc(classId)
       .collection('students')
-      .doc(data.id)
+      .doc(id)
       .set(
         {
           id: data.id,
@@ -21,8 +41,5 @@ export default functions.firestore
         },
         { merge: true }
       );
-    functions.logger.info(
-      `User created | add user to ${category} ${data.classId}`
-    );
-    console.log(`User created | add user to ${category} ${data.classId}`);
+    logInfo(`User created | add user to ${data.classId}`);
   });
