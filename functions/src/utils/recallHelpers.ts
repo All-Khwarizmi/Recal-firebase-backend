@@ -1,18 +1,10 @@
-
-import {
-  Calendar,
-  IsMemoTime,
-  IsMemoTimeReturn,
-  MemoDateData,
-  MemoDateFn,
-} from './memoTypes';
+import { Calendar } from './memoTypes';
 
 import addDays from 'date-fns/addDays';
 import addMonths from 'date-fns/addMonths';
 import addWeeks from 'date-fns/addWeeks';
-import format from 'date-fns/format';
-import { differenceInDays } from 'date-fns';
-import { MemoParser } from './memoTypes';
+
+import { Timestamp } from 'firebase-admin/firestore';
 
 /**
  * @name calendar
@@ -55,16 +47,16 @@ export const calendar: Calendar = () => {
   const recallTen = addMonths(recallNine, 5);
 
   const calendar = {
-    recallOne: format(recallOne, 'dd MMMM yyyy'),
-    recallTwo: format(recallTwo, 'dd MMMM yyyy'),
-    recallThree: format(recallThree, 'dd MMMM yyyy'),
-    recallFour: format(recallFour, 'dd MMMM yyyy'),
-    recallFive: format(recallFive, 'dd MMMM yyyy'),
-    recallSix: format(recallSix, 'dd MMMM yyyy'),
-    recallSeven: format(recallSeven, 'dd MMMM yyyy'),
-    recallEight: format(recallEight, 'dd MMMM yyyy'),
-    recallNine: format(recallNine, 'dd MMMM yyyy'),
-    recallTen: format(recallTen, 'dd MMMM yyyy'),
+    recallOne: Timestamp.fromDate(recallOne),
+    recallTwo: Timestamp.fromDate(recallTwo),
+    recallThree: Timestamp.fromDate(recallThree),
+    recallFour: Timestamp.fromDate(recallFour),
+    recallFive: Timestamp.fromDate(recallFive),
+    recallSix: Timestamp.fromDate(recallSix),
+    recallSeven: Timestamp.fromDate(recallSeven),
+    recallEight: Timestamp.fromDate(recallEight),
+    recallNine: Timestamp.fromDate(recallNine),
+    recallTen: Timestamp.fromDate(recallTen),
   };
 
   return calendar;
@@ -91,7 +83,7 @@ export const calendar: Calendar = () => {
  *  isMemoTime(memoObj)
  *  // => false
  */
-export const isMemoTime: IsMemoTime = (memoDate) => {
+/* export const isMemoTime: IsMemoTime = (memoDate) => {
   const returnObj: IsMemoTimeReturn = {
     isMemotime: false,
     difference: 0,
@@ -109,73 +101,10 @@ export const isMemoTime: IsMemoTime = (memoDate) => {
     returnObj.isMemotime = false;
     return returnObj;
   }
-};
-
-/**
- * @name memoDate
- * @category Calendar
- * @summary Set a "memoDate" that is an active recall calendar, the last and next recall dates
- *
- * @description
- * Set a "memoDate" that is an active recall calendar, the last and next recall dates
- *
- * @returns an object containing the new calendar
- * @throws {TypeError} - 0 arguments required
- *
- * @example
- * // See :
- *  @function calendar
- *  @function isMemoTime
- *
- */
-
-export const setMemoDate: MemoDateFn = () => {
-  {
-    /* @typescript-eslint/no-unsafe-assignment */
-  }
-  const memoObj: MemoDateData = Object();
-  memoObj.calendar = calendar();
-  memoObj.lastRecallDay = Date();
-  memoObj.nextRecallDay = memoObj.calendar.recallOne;
-
-  return memoObj;
-};
-export const log = console.log;
-
-export const memoParser: MemoParser = (memoDateStr) => {
-  {
-    /* @typescript-eslint/no-unsafe-assignment */
-  }
-  const memo: MemoDateData = JSON.parse(memoDateStr);
-
-  return memo;
-};
-
-type MemoDateCheckerReturn = {
-  isMemoDate: boolean;
-  memoDate?: IsMemoTimeReturn;
-};
-type MemoDateChecker = (memoName: string) => MemoDateCheckerReturn;
-export const memoDateChecker: MemoDateChecker = (memoName) => {
-  const memoDateCheckerReturn: MemoDateCheckerReturn = {
-    isMemoDate: false,
-  };
-  const isMDInLocalStorage = localStorage.getItem(memoName);
-  if (isMDInLocalStorage) {
-    console.log('isMDInLocalStorage', isMDInLocalStorage);
-    const memoDate = memoParser(isMDInLocalStorage);
-    const isTimeObj = isMemoTime(memoDate);
-    console.log('isTimeObj', isTimeObj);
-    memoDateCheckerReturn.isMemoDate = true;
-    memoDateCheckerReturn.memoDate = isTimeObj;
-    return memoDateCheckerReturn;
-  }
-
-  return memoDateCheckerReturn;
-};
+}; */
 
 export type GetNextRecallDay = (recallDay: string) => string | undefined;
-export const getNextRecallDay: GetNextRecallDay = (recallDay) => {
+export const getNextRecallDay: GetNextRecallDay = (recallDay): string => {
   if (recallDay === 'recallTen') {
     return 'recallTen';
   } else {

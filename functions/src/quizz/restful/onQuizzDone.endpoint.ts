@@ -2,8 +2,11 @@ import * as admin from 'firebase-admin';
 import { logInfo } from '../..';
 import { Post } from 'firebase-backend';
 import { Request, Response } from 'express';
+import { getNextRecallDay } from '../../utils/recallHelpers';
+import { Timestamp } from 'firebase-admin/firestore';
 
 const db = admin.firestore();
+
 
 /**
  * Endpoint to update a user quizz sub-collection
@@ -16,8 +19,11 @@ export default new Post(async (request: Request, response: Response) => {
   // Take care of updating studySessions array (object destructuring)
   const { userId, quizzName, studyDay, notificationTokenId } = request.body;
 
+  const nextRecallDay = getNextRecallDay(studyDay);
+
+
   logInfo(
-    `Executing in onQuizzDone endpoint. The last study day was ${studyDay}`
+    `Executing in onQuizzDone endpoint. The last study day was ${studyDay} and the next one is ${nextRecallDay}`
   );
 
   try {
@@ -31,7 +37,7 @@ export default new Post(async (request: Request, response: Response) => {
       .set({
         userId,
         quizzName,
-        nextStudyDay: Date.now(),
+        nextStudyDay: Timestamp.now(),
         notificationTokenId,
       });
     try {

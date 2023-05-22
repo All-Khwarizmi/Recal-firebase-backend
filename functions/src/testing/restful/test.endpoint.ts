@@ -1,8 +1,7 @@
-// import { initializeApp } from 'firebase-admin/app';
 import { Request, Response } from 'express';
 import { Post } from 'firebase-backend';
 import * as admin from 'firebase-admin';
-// initializeApp();
+
 
 export default new Post(async (request: Request, response: Response) => {
   console.log(request.body['name']);

@@ -7,6 +7,9 @@ import { logInfo } from '../..';
 const db = admin.firestore();
 export default new Post(async (request: Request, response: Response) => {
   const { id, classId, name } = request.body;
+
+  logInfo(`here is the date helper ${admin.firestore.Timestamp}`);
+
   const newQuizz = new QuizzCreator(name, classId, id);
   const quizz = newQuizz.create();
   logInfo(quizz);

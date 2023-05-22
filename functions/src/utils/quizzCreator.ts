@@ -1,5 +1,6 @@
-import { faker } from "@faker-js/faker";
-
+import { faker } from '@faker-js/faker';
+import { CalendarReturn } from './memoTypes';
+import { calendar } from './recallHelpers';
 
 export default class QuizzCreator {
   constructor(name: string, classId: string, id: string) {
@@ -16,6 +17,7 @@ export default class QuizzCreator {
   lastStudyDay: number | null = null;
   numberOfquestions?: number;
   studySessions: Array<number> = [];
+  calendar: CalendarReturn = calendar();
 
   create(): Object {
     return {
@@ -26,7 +28,8 @@ export default class QuizzCreator {
       nextStudyDay: this.nextStudyDay,
       lastStudyDay: this.lastStudyDay,
       numberOfquestions: this.numberOfquestions ?? 0,
-      studySessions: this.studySessions
+      studySessions: this.studySessions,
+      calendar: this.calendar,
     };
   }
 }
