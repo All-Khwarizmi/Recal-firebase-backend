@@ -27,7 +27,10 @@ export default functions.firestore
 
     // Update user with quizzes
     quizzes.docs.forEach((doc) => {
-      userSnapshot.ref.collection('todoQuizz').add(doc.data());
+      userSnapshot.ref
+        .collection('todoQuizz')
+        .doc(doc.data().name)
+        .set(doc.data());
     });
 
     // Update user score on creation +50

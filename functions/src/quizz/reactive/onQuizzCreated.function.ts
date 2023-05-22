@@ -34,7 +34,7 @@ export default functions.firestore
         }`
       );
 
-      // Add question to quizz on user sc
+      // Add quizz on user sc
       await db
         .collection('users')
         .doc(doc.data()['id'])
