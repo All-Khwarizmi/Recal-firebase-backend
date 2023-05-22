@@ -5,7 +5,11 @@ const db = admin.firestore();
 const logInfo = functions.logger.info;
 
 /**
- * On user created add it to category
+ * On user created
+ *    - add it to category
+ *    - update it with already created quizzes
+ *    - update user score +50 on creation
+ *
  *
  */
 export default functions.firestore
@@ -25,6 +29,9 @@ export default functions.firestore
     quizzes.docs.forEach((doc) => {
       userSnapshot.ref.collection('todoQuizz').add(doc.data());
     });
+
+    // Update user score on creation +50
+    userSnapshot.ref.update({ score: 50 });
 
     // Add to category
     await db
