@@ -10,13 +10,35 @@ const db = admin.firestore();
  *
  * */
 export default new Post(async (request: Request, response: Response) => {
-  const { userId, quizzName, studyDay } = request.body;
+  // Todo :
+  // need more args : userNotificationToken, classId
+  // need helper to determine when to take quizz again
+  // Take care of updating studySessions array (object destructuring)
+  const { userId, quizzName, studyDay, notificationTokenId } = request.body;
 
   logInfo(
     `Executing in onQuizzDone endpoint. The last study day was ${studyDay}`
   );
-  
+
   try {
+    // Adding/updating todoQuizz on general collection
+    // Todo : update studySessions array too?!
+    await db
+      .collection('generalTodoQuizzes')
+      .doc(userId)
+      .collection('generalTodoQuizz')
+      .doc(quizzName)
+      .set({
+        userId,
+        quizzName,
+        nextStudyDay: Date.now(),
+        notificationTokenId,
+      });
+    try {
+    } catch (e) {
+      logInfo(`Error in onQuizzDone endpoint: ${e}`);
+    }
+
     try {
       const quizzRef = db
         .collection('users')
