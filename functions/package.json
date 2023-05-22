@@ -16,6 +16,7 @@
   },
   "main": "lib/index.js",
   "dependencies": {
+    "@faker-js/faker": "^8.0.1",
     "firebase-admin": "^11.8.0",
     "firebase-backend": "^0.2.5",
     "firebase-functions": "^4.3.1"
