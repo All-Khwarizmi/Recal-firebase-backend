@@ -11,7 +11,7 @@ const db = admin.firestore();
  * */
 export default new Post(async (request: Request, response: Response) => {
   // Todo :
-  // need more args : userNotificationToken, classId
+  // need more args : userNotificationToken, classId, userName
   // need helper to determine when to take quizz again
   // Take care of updating studySessions array (object destructuring)
   const { userId, quizzName, studyDay, notificationTokenId } = request.body;
