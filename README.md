@@ -1,5 +1,7 @@
 # Recal-firebase-backend
 
+<br>
+
 This is where all the Recal flutter application backend logic is located. 
 
 I tryed to manage all the business logic and user data on local, however I hit some limitations, most of all on Ios devices (background processes, local notifications). 
@@ -25,14 +27,25 @@ The business logic is mainly devided into tow big parts:
 
 The backend structure follows the guidelines of the package [firebase-backend](https://www.npmjs.com/package/firebase-backend) "that helps with the management and expansion of a maintainable firebase backend". 
 
-So we handle events in two ways:
+So we handle events in three ways:
 
-##### Reactive
-Whenever an event on the Firestore database that triggers a cloud function
+#### Reactive
+Whenever an event on the Firestore database that triggers a cloud function:
+- On user created:
+- On quizz created
+- On question created: 
+- On quizz done:
 
   
-##### RESTful
+#### RESTful
 There are HTTP POST endpoints that when hit make CRUD operations: 
+- Create an user
+- Create a quizz
+- Create a question
+
+#### Task queue
+Task queue functions that run periodicaly to:
+- Check if a user needs to take a quizz and notify him
 
 <br>
 
