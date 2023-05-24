@@ -11,9 +11,12 @@ export default new Post(async (reququest: Request, response: Response) => {
     .firestore()
     .collection('users')
     .doc(id)
-    .set({ id, classId, name, notificationTokenId }, { merge: true });
+    .set(
+      { id, classId, name, notificationTokenId, score: 50 },
+      { merge: true }
+    );
 
- /*  const category = await admin
+  /*  const category = await admin
     .firestore()
     .collection('category')
     .doc(classId)

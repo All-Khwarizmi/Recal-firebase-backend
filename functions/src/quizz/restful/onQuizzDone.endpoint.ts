@@ -5,6 +5,7 @@ import { Request, Response } from 'express';
 import { getNextRecallDay } from '../../utils/recallHelpers';
 import { Timestamp } from 'firebase-admin/firestore';
 
+
 const db = admin.firestore();
 
 
@@ -39,6 +40,7 @@ export default new Post(async (request: Request, response: Response) => {
         quizzName,
         nextStudyDay: Timestamp.now(),
         notificationTokenId,
+        status: 'scheduled'
       });
     try {
     } catch (e) {
