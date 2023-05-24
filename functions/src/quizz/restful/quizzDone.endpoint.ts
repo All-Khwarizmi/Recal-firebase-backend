@@ -55,18 +55,13 @@ export default new Post(async (request: Request, response: Response) => {
 
         // Updating todoQuizz on general collection
 
-        await db
-          .collection('generalTodoQuizzes')
-          .doc(userId)
-          .collection('generalTodoQuizz')
-          .doc(quizzName)
-          .set(
-            {
-              lastStudyDay: Timestamp.now(),
-              nextStudyDay: calendar[nextRecallDay!],
-            },
-            { merge: true }
-          );
+        await db.collection('generalTodoQuizzes').doc().set(
+          {
+            lastStudyDay: Timestamp.now(),
+            nextStudyDay: calendar[nextRecallDay!],
+          },
+          { merge: true }
+        );
 
         response
           .status(201)
@@ -91,23 +86,18 @@ export default new Post(async (request: Request, response: Response) => {
 
       // Adding todoQuizz on general collection
 
-      await db
-        .collection('generalTodoQuizzes')
-        .doc(userId)
-        .collection('generalTodoQuizz')
-        .doc(quizzName)
-        .set(
-          {
-            userId,
-            quizzName,
-            userName,
-            lastStudyDay: Timestamp.now(),
-            nextStudyDay: Timestamp.now(),
-            notificationTokenId,
-            status: 'scheduled',
-          },
-          { merge: true }
-        );
+      await db.collection('generalTodoQuizzes').doc().set(
+        {
+          userId,
+          quizzName,
+          userName,
+          lastStudyDay: Timestamp.now(),
+          nextStudyDay: Timestamp.now(),
+          notificationTokenId,
+          status: 'scheduled',
+        },
+        { merge: true }
+      );
 
       response
         .status(201)
