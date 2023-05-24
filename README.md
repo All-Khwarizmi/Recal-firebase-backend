@@ -21,7 +21,6 @@ The business logic is mainly devided into tow big parts:
 - Processing application events
 - Sending notifications
 
-<br>
 
 ### Handling events
 
