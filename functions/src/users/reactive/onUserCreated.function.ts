@@ -33,8 +33,6 @@ export default functions.firestore
         .set(doc.data());
     });
 
-    // Update user score on creation +50
-    userSnapshot.ref.update({ score: 50 });
 
     // Add to category
     await db
