@@ -10,13 +10,30 @@ So I decided to manage all the heavy lifting on Firebase:
 - Database: Firestore for realtime like feeling and off line handling
 - Business logic: Cloud Functions and Firebase Cloud Notifications
 
+<br>
+
 ## Business logic 
 
-The business logic is mainly devided into tow big parts
+The business logic is mainly devided into tow big parts:
 
 - Processing application events
 - Sending notifications
 
+<br>
+
 ### Handling events
+
+The backend structure follows the guidelines of the package [firebase-backend](https://www.npmjs.com/package/firebase-backend) "that helps with the management and expansion of a maintainable firebase backend". 
+
+So we handle events in two ways:
+
+##### Reactive
+Whenever an event on the Firestore database that triggers a cloud function
+
+  
+##### RESTful
+There are HTTP POST endpoints that when hit make CRUD operations: 
+
+<br>
 
 ### Notifications
