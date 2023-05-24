@@ -6,14 +6,15 @@ import { logInfo } from '../..';
 
 const db = admin.firestore();
 export default new Post(async (request: Request, response: Response) => {
-  const { id, classId, name } = request.body;
+  const { id, classId, name, notificationTokenId } = request.body;
 
-  logInfo(`here is the date helper ${admin.firestore.Timestamp}`);
+  logInfo(`Executing endpoint fn "create quizz"`);
 
-  const newQuizz = new QuizzCreator(name, classId, id);
+  const newQuizz = new QuizzCreator(name, classId, id, notificationTokenId);
   const quizz = newQuizz.create();
-  logInfo(quizz);
+  
   try {
+    
     const quizzDb = await db
       .collection('quizz')
       .doc(name)

@@ -16,6 +16,11 @@ const logInfo = functions.logger.info;
 export default functions.firestore
   .document('users/{userId}')
   .onCreate(async (userSnapshot, context) => {
+
+    logInfo(
+      `Executing reactive fn "on User Created that should fetch all quizzes from a matching class and update users"`
+    );
+
     const { name, id, classId } = userSnapshot.data();
     logInfo(`${name}, ${id}, ${classId}`);
     const data = userSnapshot.data();

@@ -16,13 +16,13 @@ export default new Post(async (request: Request, response: Response) => {
   // need more args : userNotificationToken, classId, userName
   // need helper to determine when to take quizz again
   // Take care of updating studySessions array (object destructuring)
-  const { userId, quizzName, studyDay, notificationTokenId, userName } =
+  const { userId, quizzName, studyDay, userName, notificationTokenId } =
     request.body;
 
   const nextRecallDay = getNextRecallDay(studyDay);
 
   logInfo(
-    `Executing in onQuizzDone endpoint. The last study day was ${studyDay} and the next one is ${nextRecallDay}`
+    `Executing in Quizz Done endpoint. The last study day was ${studyDay} and the next one is ${nextRecallDay}`
   );
 
   try {
@@ -77,6 +77,7 @@ export default new Post(async (request: Request, response: Response) => {
         logInfo(
           `Error in QuizzDone endpoint. There's no studySessions array. Creating one...  ${e}`
         );
+        response.status(500).send(`Error in quizzDone endpoint: ${e}`);
       }
     } else {
       await quizzRef.set(
