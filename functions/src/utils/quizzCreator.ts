@@ -1,6 +1,7 @@
 import { faker } from '@faker-js/faker';
 import { CalendarReturn } from './memoTypes';
 import { calendar } from './recallHelpers';
+import { Timestamp } from 'firebase-admin/firestore';
 
 export default class QuizzCreator {
   constructor(name: string, classId: string, id: string) {
@@ -13,10 +14,10 @@ export default class QuizzCreator {
   image: string = faker.image.url({});
   classId: string;
   id: string;
-  nextStudyDay: number = Date.now();
-  lastStudyDay: number | null = null;
+  nextStudyDay: Timestamp = Timestamp.now();
+  lastStudyDay: Timestamp | null = null;
   numberOfquestions?: number;
-  studySessions: Array<number> = [];
+  studySessions: Array<Timestamp> = [];
   calendar: CalendarReturn = calendar();
 
   create(): Object {
@@ -27,7 +28,7 @@ export default class QuizzCreator {
       id: this.id,
       nextStudyDay: this.nextStudyDay,
       lastStudyDay: this.lastStudyDay,
-      numberOfquestions: this.numberOfquestions ?? 0,
+      numberOfQuestions: this.numberOfquestions ?? 0,
       studySessions: this.studySessions,
       calendar: this.calendar,
     };

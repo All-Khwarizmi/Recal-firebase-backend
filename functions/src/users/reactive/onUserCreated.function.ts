@@ -1,5 +1,6 @@
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
+import { calendar } from '../../utils/recallHelpers';
 
 const db = admin.firestore();
 const logInfo = functions.logger.info;
@@ -27,14 +28,32 @@ export default functions.firestore
 
     // Update user with quizzes
     quizzes.docs.forEach((doc) => {
-      userSnapshot.ref
-        .collection('todoQuizz')
-        .doc(doc.data().name)
-        .set(doc.data());
+      const {
+        classId,
+        id,
+        image,
+        lastStudyDay,
+        nextStudyDay,
+        numberOfQuestions,
+        studySessions,
+        name,
+      } = doc.data();
+      userSnapshot.ref.collection('todoQuizz').doc(doc.data().name).set({
+        classId,
+        id,
+        image,
+        lastStudyDay,
+        nextStudyDay,
+        numberOfQuestions,
+        studySessions,
+        name,
+        calendar: calendar(),
+      });
     });
 
-
     // Add to category
+    // Todo : add a single responsability function
+
     await db
       .collection('category')
       .doc(classId)
