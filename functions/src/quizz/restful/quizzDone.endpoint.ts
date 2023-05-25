@@ -13,19 +13,17 @@ const db = admin.firestore();
  * */
 export default new Post(async (request: Request, response: Response) => {
   // Todo :
-  // need more args : userNotificationToken, classId, userName
-  // need helper to determine when to take quizz again
   // Take care of updating studySessions array (object destructuring)
-  const { userId, quizzName, studyDay, userName, notificationTokenId } =
-    request.body;
-
-  const nextRecallDay = getNextRecallDay(studyDay);
-
-  logInfo(
-    `Executing in Quizz Done endpoint. The last study day was ${studyDay} and the next one is ${nextRecallDay}`
-  );
 
   try {
+    const { userId, quizzName, studyDay, userName, userNotificationTokenId } =
+      request.body;
+
+    const nextRecallDay = getNextRecallDay(studyDay);
+
+    logInfo(
+      `Executing in Quizz Done endpoint. The last study day was ${studyDay} and the next one is ${nextRecallDay}`
+    );
     // Update user quizzTodo sub collection
 
     // Getting doc ref
@@ -55,18 +53,18 @@ export default new Post(async (request: Request, response: Response) => {
 
         // Updating todoQuizz on general collection
 
-         await db.collection('generalTodoQuizzes').doc().set(
-           {
-             userId,
-             quizzName,
-             userName,
-             lastStudyDay: Timestamp.now(),
-             nextStudyDay: calendar[nextRecallDay!],
-             notificationTokenId,
-             status: 'scheduled',
-           },
-           { merge: true }
-         );
+        await db.collection('generalTodoQuizzes').doc().set(
+          {
+            userId,
+            quizzName,
+            userName,
+            lastStudyDay: Timestamp.now(),
+            nextStudyDay: calendar[nextRecallDay!],
+            userNotificationTokenId,
+            status: 'scheduled',
+          },
+          { merge: true }
+        );
 
         response
           .status(201)
@@ -99,7 +97,7 @@ export default new Post(async (request: Request, response: Response) => {
           userName,
           lastStudyDay: Timestamp.now(),
           nextStudyDay: Timestamp.now(),
-          notificationTokenId,
+          userNotificationTokenId,
           status: 'scheduled',
         },
         { merge: true }
