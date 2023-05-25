@@ -1,28 +1,26 @@
-// import { initializeApp } from 'firebase-admin/app';
 import { Request, Response } from 'express';
 import { Post } from 'firebase-backend';
 import * as admin from 'firebase-admin';
-//initializeApp();
+import { logInfo } from '../..';
 
 export default new Post(async (reququest: Request, response: Response) => {
-  const { name, notificationTokenId, id, classId } = reququest.body;
+  try {
+    const { userName, notificationTokenId, userId, classId } = reququest.body;
 
-  const user = await admin
-    .firestore()
-    .collection('users')
-    .doc(id)
-    .set(
-      { id, classId, name, notificationTokenId, score: 50 },
-      { merge: true }
-    );
+    await admin
+      .firestore()
+      .collection('users')
+      .doc(userId)
+      .set(
+        { userId, classId, userName, notificationTokenId, userScore: 50 },
+        { merge: true }
+      );
 
-  /*  const category = await admin
-    .firestore()
-    .collection('category')
-    .doc(classId)
-    .collection('students')
-    .doc(id)
-    .set({ id, classId, name, notificationTokenId }, { merge: true }); */
-
-  response.status(201).send({ user });
+    response
+      .status(201)
+      .send(`User ${userName} from class ${classId} created successfully`);
+  } catch (e) {
+    logInfo(`Error in Create User endpoint ${e}`);
+    response.status(500).send(`Error in Create User endpoint ${e}`);
+  }
 });
