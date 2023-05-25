@@ -6,23 +6,26 @@ import { logInfo } from '../..';
 
 const db = admin.firestore();
 export default new Post(async (request: Request, response: Response) => {
-  const { id, classId, name, notificationTokenId } = request.body;
-
-  logInfo(`Executing endpoint fn "create quizz"`);
-
-  const newQuizz = new QuizzCreator(name, classId, id, notificationTokenId);
-  const quizz = newQuizz.create();
-  
   try {
+    const { quizzId, classId, quizzName, userNotificationTokenId } =
+      request.body;
+
+    logInfo(`Executing endpoint fn "create quizz"`);
+
+    const newQuizz = new QuizzCreator(
+      quizzName,
+      classId,
+      quizzId,
+      userNotificationTokenId
+    );
+    const quizz = newQuizz.create();
+
+    await db.collection('quizz').doc(quizzName).set(quizz, { merge: true });
+
+    response.status(201).send(`Quiz ${quizzName} created successfully`);
     
-    const quizzDb = await db
-      .collection('quizz')
-      .doc(name)
-      .set(quizz, { merge: true });
-    logInfo(quizzDb);
   } catch (e) {
     logInfo(`Error in createQuiz endpoint ${e}`);
+    response.status(500).send(`Error in createQuiz endpoint ${e}`);
   }
-
-  response.status(201).send({ quizz });
 });

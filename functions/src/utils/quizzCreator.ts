@@ -4,18 +4,23 @@ import { calendar } from './recallHelpers';
 import { Timestamp } from 'firebase-admin/firestore';
 
 export default class QuizzCreator {
-  constructor(name: string, classId: string, id: string, notificationTokenId: string) {
-    this.name = name;
+  constructor(
+    quizzName: string,
+    classId: string,
+    quizzId: string,
+    userNotificationTokenId: string
+  ) {
+    this.quizzName = quizzName;
     this.classId = classId;
-    this.id = id;
-    this.notificationTokenId = notificationTokenId;
+    this.quizzId = quizzId;
+    this.userNotificationTokenId = userNotificationTokenId;
   }
 
-  name: string;
+  quizzName: string;
   image: string = faker.image.url({});
   classId: string;
-  notificationTokenId: string;
-  id: string;
+  userNotificationTokenId: string;
+  quizzId: string;
   nextStudyDay: Timestamp = Timestamp.now();
   lastStudyDay: Timestamp | null = null;
   numberOfquestions?: number;
@@ -24,15 +29,16 @@ export default class QuizzCreator {
 
   create(): Object {
     return {
-      name: this.name,
+      name: this.quizzName,
       image: this.image,
       classId: this.classId,
-      id: this.id,
+      quizzId: this.quizzId,
       nextStudyDay: this.nextStudyDay,
       lastStudyDay: this.lastStudyDay,
       numberOfQuestions: this.numberOfquestions ?? 0,
       studySessions: this.studySessions,
       calendar: this.calendar,
+      userNotificationTokenId: this.userNotificationTokenId,
     };
   }
 }
