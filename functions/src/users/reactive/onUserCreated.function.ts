@@ -1,6 +1,7 @@
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
 import { calendar } from '../../utils/recallHelpers';
+import { v4 as uuidv4 } from 'uuid';
 
 const db = admin.firestore();
 const logInfo = functions.logger.info;
@@ -16,13 +17,13 @@ const logInfo = functions.logger.info;
 export default functions.firestore
   .document('users/{userId}')
   .onCreate(async (userSnapshot, context) => {
-
     logInfo(
       `Executing reactive fn "on User Created that should fetch all quizzes from a matching class and update users"`
     );
 
-    const { name, id, classId } = userSnapshot.data();
-    logInfo(`${name}, ${id}, ${classId}`);
+    const { name, userId, classId, score, notificationTokenId } =
+      userSnapshot.data();
+    logInfo(`${name}, ${userId}, ${classId}`);
     const data = userSnapshot.data();
 
     // Get the quizzes
@@ -35,43 +36,42 @@ export default functions.firestore
     quizzes.docs.forEach((doc) => {
       const {
         classId,
-        id,
+        userId,
         image,
         lastStudyDay,
         nextStudyDay,
         numberOfQuestions,
         studySessions,
-        name,
+        quizName,
       } = doc.data();
-      userSnapshot.ref.collection('todoQuizz').doc(doc.data().name).set({
+      userSnapshot.ref.collection('todoQuizz').doc(doc.data().quizzName).set({
         classId,
-        id,
+        userId,
         image,
         lastStudyDay,
         nextStudyDay,
         numberOfQuestions,
         studySessions,
-        name,
+        quizName,
         calendar: calendar(),
       });
     });
 
     // Add to category
     // Todo : add a single responsability function
+    const categoryRef = db.collection('category').doc(classId);
 
-    await db
-      .collection('category')
-      .doc(classId)
-      .collection('students')
-      .doc(id)
-      .set(
-        {
-          id: data.id,
-          classId: data.classId,
-          name: data.name,
-          notificationTokenId: data.notificationTokenId,
-        },
-        { merge: true }
-      );
+    await categoryRef.set({ name: classId, categoryId: uuidv4() }, { merge: true });
+
+    await categoryRef.collection('students').doc(userId).set(
+      {
+        userId,
+        classId,
+        name,
+        notificationTokenId,
+        score,
+      },
+      { merge: true }
+    );
     logInfo(`User created | add user to ${data.classId}`);
   });
