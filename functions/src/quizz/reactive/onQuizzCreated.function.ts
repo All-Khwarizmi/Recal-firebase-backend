@@ -11,7 +11,7 @@ export default functions.firestore
       `Executing reactive fn "on Quizz created that should fetch all users from a matching class and update users"`
     );
     try {
-      const { classId, name } = quizzSnapshot.data()!;
+      const { classId, quizzName } = quizzSnapshot.data()!;
       const data = quizzSnapshot.data();
 
       // Get users ref
@@ -30,19 +30,16 @@ export default functions.firestore
 
       // Update users
       usersSnapshot.forEach(async (doc) => {
-        logInfo(
-          `${doc.data()['classId']}, ${doc.data()['name']}, ${
-            doc.data()['notificationTokenId']
-          }`
-        );
+        const { classId, userName, userNotificationTokenId, userId } = doc.data();
+        logInfo(`${classId}, ${userName}, ${userNotificationTokenId}`);
 
         // Add quizz on user sc
         // Todo : use doc.ref to update user
         await db
           .collection('users')
-          .doc(doc.data()['id'])
+          .doc(userId)
           .collection('todoQuizz')
-          .doc(name)
+          .doc(quizzName)
           .set(data!, { merge: true });
       });
     } catch (e) {
