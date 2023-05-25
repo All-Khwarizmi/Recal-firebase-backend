@@ -16,47 +16,28 @@ export default new Get(async (request: Request, response: Response) => {
 
     const testRef = db.collection('test');
 
-    const quizzMap = new Map();
-    quizzMap.set('test', 'value');
-
     quizzList.docs.forEach(async (doc) => {
       const {
         userId,
         quizzName,
         userName,
-        lastStudyDay,
-        nextStudyDay,
+        // lastStudyDay,
+        // nextStudyDay,
         notificationTokenId,
-        status,
+        // status,
       } = doc.data();
 
-      if (quizzMap.has(userId)) {
-        const cacheDoc = quizzMap.get(userId);
-        logInfo(`Cachedoc: ${JSON.stringify(cacheDoc)}`);
-        cacheDoc['quizzes'].push(quizzName);
-      } else {
-        const docObj = {
-          userName,
-          notificationTokenId,
-          quizzes: [quizzName],
-        };
-        logInfo(`Docobj: ${JSON.stringify(docObj)}`);
-        quizzMap.set(userId, docObj);
-        await testRef.doc(userId).set({ docObj }, { merge: true });
-      }
+      const docObj = {
+        userName,
+        notificationTokenId,
+        quizzes: [quizzName],
+      };
 
-      logInfo(`Here is the doc ${userId},
-          ${quizzName},
-          ${userName},
-          ${lastStudyDay},
-          ${nextStudyDay},
-          ${notificationTokenId},
-          ${status}`);
-      logInfo(`Here is the map${quizzMap}`);
+      await testRef.doc(userId).set(docObj, { merge: true });
     });
     logInfo(`List size: ${quizzList.size}`);
     logInfo(`List is empty: ${quizzList.empty}`);
-    response.send(quizzMap);
+    response.send('ok');
   } catch (e) {
     logInfo(`Error in test endpoint: ${e}`);
     response.status(500).send(`Error in test endpoint: ${e}`);
