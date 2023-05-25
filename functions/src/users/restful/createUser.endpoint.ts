@@ -5,14 +5,15 @@ import { logInfo } from '../..';
 
 export default new Post(async (reququest: Request, response: Response) => {
   try {
-    const { userName, notificationTokenId, userId, classId } = reququest.body;
+    const { userName, userNotificationTokenId, userId, classId } =
+      reququest.body;
 
     await admin
       .firestore()
       .collection('users')
       .doc(userId)
       .set(
-        { userId, classId, userName, notificationTokenId, userScore: 50 },
+        { userId, classId, userName, userNotificationTokenId, userScore: 50 },
         { merge: true }
       );
 

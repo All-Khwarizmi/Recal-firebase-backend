@@ -29,7 +29,7 @@ export default class QuizzCreator {
 
   create(): Object {
     return {
-      name: this.quizzName,
+      quizzName: this.quizzName,
       image: this.image,
       classId: this.classId,
       quizzId: this.quizzId,

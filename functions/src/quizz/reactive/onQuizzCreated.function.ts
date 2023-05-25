@@ -12,6 +12,7 @@ export default functions.firestore
     );
     try {
       const { classId, quizzName } = quizzSnapshot.data()!;
+      logInfo(`QuizzName : ${quizzName}. ClassId: ${classId}`);
       const data = quizzSnapshot.data();
 
       // Get users ref
@@ -30,7 +31,8 @@ export default functions.firestore
 
       // Update users
       usersSnapshot.forEach(async (doc) => {
-        const { classId, userName, userNotificationTokenId, userId } = doc.data();
+        const { classId, userName, userNotificationTokenId, userId } =
+          doc.data();
         logInfo(`${classId}, ${userName}, ${userNotificationTokenId}`);
 
         // Add quizz on user sc
