@@ -31,7 +31,7 @@ export default functions.firestore
 
       // Update users
       usersSnapshot.forEach(async (doc) => {
-        const { classId, userName, userNotificationTokenId, userId } =
+        const { classId, userName, userNotificationTokenId } =
           doc.data();
         logInfo(`${classId}, ${userName}, ${userNotificationTokenId}`);
 
@@ -39,7 +39,7 @@ export default functions.firestore
         // Todo : use doc.ref to update user
         await db
           .collection('users')
-          .doc(userId)
+          .doc(userNotificationTokenId)
           .collection('todoQuizz')
           .doc(quizzName)
           .set(data!, { merge: true });

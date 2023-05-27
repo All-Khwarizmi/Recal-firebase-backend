@@ -29,11 +29,11 @@ export default functions.firestore
 
       // Add question to quizz on user sc
       usersSnapshot.forEach(async (doc) => {
-        const { userId } = doc.data();
+        const { userNotificationTokenId } = doc.data();
 
         await db
           .collection('users')
-          .doc(userId)
+          .doc(userNotificationTokenId)
           .collection('todoQuizz')
           .doc(quizzId)
           .collection('questions')

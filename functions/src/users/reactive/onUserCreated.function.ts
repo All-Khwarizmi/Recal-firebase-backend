@@ -37,8 +37,8 @@ export default functions.firestore
       quizzes.docs.forEach((doc) => {
         const {
           classId,
-          userId,
           image,
+          quizzId,
           lastStudyDay,
           nextStudyDay,
           numberOfQuestions,
@@ -47,7 +47,7 @@ export default functions.firestore
         } = doc.data();
         userSnapshot.ref.collection('todoQuizz').doc(quizzName).set({
           classId,
-          userId,
+          quizzId,
           image,
           lastStudyDay,
           nextStudyDay,
