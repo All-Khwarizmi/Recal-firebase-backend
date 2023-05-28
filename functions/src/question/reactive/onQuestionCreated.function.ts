@@ -13,6 +13,25 @@ export default functions.firestore
       const { questionId, quizzId } = context.params;
       const { classId } = questionSnapshot.data();
 
+      // Update number of questions field in Quizz
+      const quizzInRootCollectionRef = db.collection('quizz').doc(quizzId);
+      const quizzInRootCollectionSnapshot =
+        await quizzInRootCollectionRef.collection("questions").get();
+
+      let numberOfQuestionsInQuizz = 0;
+
+      // Checking if doc exists and updating it if so
+      if (!quizzInRootCollectionSnapshot.empty) {
+        const  oldNumberOfQuestionsInRootQuizz =
+          quizzInRootCollectionSnapshot.size;
+
+        numberOfQuestionsInQuizz = oldNumberOfQuestionsInRootQuizz;
+        await quizzInRootCollectionRef.set(
+          { numberOfQuestions: oldNumberOfQuestionsInRootQuizz },
+          { merge: true }
+        );
+      }
+
       // Get users ref
       const usersRef = db.collection('users');
 
@@ -30,7 +49,23 @@ export default functions.firestore
       // Add question to quizz on user sc
       usersSnapshot.forEach(async (doc) => {
         const { userNotificationTokenId } = doc.data();
+        //  todoQuizz ref
+        const userTodoQuizzRef = db
+          .collection('users')
+          .doc(userNotificationTokenId)
+          .collection('todoQuizz')
+          .doc(quizzId);
 
+
+        // Updating todoQuizz
+        await userTodoQuizzRef.set(
+          {
+            numberOfQuestions: numberOfQuestionsInQuizz,
+          },
+          { merge: true }
+        );
+
+        // Adding question data to todoQuizz sc
         await db
           .collection('users')
           .doc(userNotificationTokenId)
