@@ -15,14 +15,15 @@ export default functions.firestore
 
       // Update number of questions field in Quizz
       const quizzInRootCollectionRef = db.collection('quizz').doc(quizzId);
-      const quizzInRootCollectionSnapshot =
-        await quizzInRootCollectionRef.collection("questions").get();
+      const quizzInRootCollectionSnapshot = await quizzInRootCollectionRef
+        .collection('questions')
+        .get();
 
       let numberOfQuestionsInQuizz = 0;
 
       // Checking if doc exists and updating it if so
       if (!quizzInRootCollectionSnapshot.empty) {
-        const  oldNumberOfQuestionsInRootQuizz =
+        const oldNumberOfQuestionsInRootQuizz =
           quizzInRootCollectionSnapshot.size;
 
         numberOfQuestionsInQuizz = oldNumberOfQuestionsInRootQuizz;
@@ -55,7 +56,6 @@ export default functions.firestore
           .doc(userNotificationTokenId)
           .collection('todoQuizz')
           .doc(quizzId);
-
 
         // Updating todoQuizz
         await userTodoQuizzRef.set(
