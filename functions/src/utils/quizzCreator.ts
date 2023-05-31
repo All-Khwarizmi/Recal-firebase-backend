@@ -26,6 +26,9 @@ export default class QuizzCreator {
   numberOfquestions?: number;
   studySessions: Array<Timestamp> = [];
   calendar: CalendarReturn = calendar();
+  repetitions: number = 0;
+  previousInterval: number = 0;
+  previousEaseFactor: number = 2.5;
 
   create(): Object {
     return {
@@ -39,6 +42,9 @@ export default class QuizzCreator {
       studySessions: this.studySessions,
       calendar: this.calendar,
       userNotificationTokenId: this.userNotificationTokenId,
+      repetitions: this.repetitions,
+      previousInterval: this.previousInterval,
+      previousEaseFactor: this.previousEaseFactor,
     };
   }
 }
