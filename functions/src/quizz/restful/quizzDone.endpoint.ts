@@ -2,7 +2,6 @@ import * as admin from 'firebase-admin';
 import { logInfo } from '../..';
 import { Post } from 'firebase-backend';
 import { Request, Response } from 'express';
-import { getNextRecallDay } from '../../utils/recallHelpers';
 import { Timestamp } from 'firebase-admin/firestore';
 
 const db = admin.firestore();
@@ -13,7 +12,7 @@ const db = admin.firestore();
  * */
 export default new Post(async (request: Request, response: Response) => {
   // Todo :
-  /// Change logic cause quizz must exist and what's needs to be checked is the presence in general todoQuizz collection 
+  /// Change logic cause quizz must exist and what's needs to be checked is the presence in general todoQuizz collection
 
   try {
     const {
@@ -27,7 +26,7 @@ export default new Post(async (request: Request, response: Response) => {
       previousEaseFactor,
     } = request.body;
 
-   // const nextRecallDay = getNextRecallDay(studyDay);
+    // const nextRecallDay = getNextRecallDay(studyDay);
 
     logInfo(
       `Executing in Quizz Done endpoint. The next one is ${nextStudyDay}`
@@ -49,7 +48,7 @@ export default new Post(async (request: Request, response: Response) => {
       try {
         const { studySessions } = quizz.data()!;
         const newStudySessionsArr = [...studySessions, Timestamp.now()];
-        
+
         await quizzRef.set(
           {
             lastStudyDay: Timestamp.now(),
