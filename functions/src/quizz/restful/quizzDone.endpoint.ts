@@ -13,16 +13,24 @@ const db = admin.firestore();
  * */
 export default new Post(async (request: Request, response: Response) => {
   // Todo :
-  // Take care of updating studySessions array (object destructuring)
+  /// Change logic cause quizz must exist and what's needs to be checked is the presence in general todoQuizz collection 
 
   try {
-    const { userId, quizzName, studyDay, userName, userNotificationTokenId } =
-      request.body;
+    const {
+      userId,
+      quizzName,
+      nextStudyDay,
+      userName,
+      userNotificationTokenId,
+      repetitions,
+      previousInterval,
+      previousEaseFactor,
+    } = request.body;
 
-    const nextRecallDay = getNextRecallDay(studyDay);
+   // const nextRecallDay = getNextRecallDay(studyDay);
 
     logInfo(
-      `Executing in Quizz Done endpoint. The last study day was ${studyDay} and the next one is ${nextRecallDay}`
+      `Executing in Quizz Done endpoint. The next one is ${nextStudyDay}`
     );
     // Update user quizzTodo sub collection
 
@@ -39,32 +47,37 @@ export default new Post(async (request: Request, response: Response) => {
     // Updating/creating doc
     if (quizz.exists) {
       try {
-        const { studySessions, calendar } = quizz.data()!;
+        const { studySessions } = quizz.data()!;
         const newStudySessionsArr = [...studySessions, Timestamp.now()];
-
+        
         await quizzRef.set(
           {
             lastStudyDay: Timestamp.now(),
             studySessions: newStudySessionsArr,
-            nextStudyDay: calendar[nextRecallDay!],
+            nextStudyDay: Timestamp.fromDate(new Date(nextStudyDay)),
+            previousEaseFactor,
+            previousInterval,
+            repetitions,
           },
           { merge: true }
         );
 
         // Updating todoQuizz on general collection
-
-        await db.collection('generalTodoQuizzes').doc().set(
-          {
-            userId,
-            quizzName,
-            userName,
-            lastStudyDay: Timestamp.now(),
-            nextStudyDay: calendar[nextRecallDay!],
-            userNotificationTokenId,
-            status: 'scheduled',
-          },
-          { merge: true }
-        );
+        await db
+          .collection('generalTodoQuizzes')
+          .doc()
+          .set(
+            {
+              userId,
+              quizzName,
+              userName,
+              lastStudyDay: Timestamp.now(),
+              nextStudyDay: Timestamp.fromDate(new Date(nextStudyDay)),
+              userNotificationTokenId,
+              status: 'scheduled',
+            },
+            { merge: true }
+          );
 
         response
           .status(201)
@@ -81,27 +94,29 @@ export default new Post(async (request: Request, response: Response) => {
       await quizzRef.set(
         {
           lastStudyDay: Timestamp.now(),
-          // TODO : change this to futur date from calendar
-          nextStudyDay: Timestamp.now(),
+          // TODO : change this to future date from calendar
+          nextStudyDay: Timestamp.fromDate(new Date(nextStudyDay)),
           studySessions: [Timestamp.now()],
         },
         { merge: true }
       );
 
-      // Adding todoQuizz on general collection
-
-      await db.collection('generalTodoQuizzes').doc().set(
-        {
-          userId,
-          quizzName,
-          userName,
-          lastStudyDay: Timestamp.now(),
-          nextStudyDay: Timestamp.now(),
-          userNotificationTokenId,
-          status: 'scheduled',
-        },
-        { merge: true }
-      );
+      // Adding todoQuizz to general collection
+      await db
+        .collection('generalTodoQuizzes')
+        .doc()
+        .set(
+          {
+            userId,
+            quizzName,
+            userName,
+            lastStudyDay: Timestamp.now(),
+            nextStudyDay: Timestamp.fromDate(new Date(nextStudyDay)),
+            userNotificationTokenId,
+            status: 'scheduled',
+          },
+          { merge: true }
+        );
 
       response
         .status(201)
