@@ -23,7 +23,7 @@ export default class QuizzCreator {
   quizzId: string;
   nextStudyDay: Timestamp = Timestamp.now();
   lastStudyDay: Timestamp | null = null;
-  numberOfquestions?: number;
+  numberOfQuestions?: number;
   studySessions: Array<Timestamp> = [];
   calendar: CalendarReturn = calendar();
   repetitions: number = 0;
@@ -38,7 +38,7 @@ export default class QuizzCreator {
       quizzId: this.quizzId,
       nextStudyDay: this.nextStudyDay,
       lastStudyDay: this.lastStudyDay,
-      numberOfQuestions: this.numberOfquestions ?? 0,
+      numberOfQuestions: this.numberOfQuestions ?? 0,
       studySessions: this.studySessions,
       calendar: this.calendar,
       userNotificationTokenId: this.userNotificationTokenId,

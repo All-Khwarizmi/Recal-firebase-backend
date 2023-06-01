@@ -49,14 +49,15 @@ export default new Post(async (request: Request, response: Response) => {
         const { studySessions } = quizz.data()!;
         const newStudySessionsArr = [...studySessions, Timestamp.now()];
 
+        // TODO : check string to num conversion
         await quizzRef.set(
           {
             lastStudyDay: Timestamp.now(),
             studySessions: newStudySessionsArr,
             nextStudyDay: Timestamp.fromDate(new Date(nextStudyDay)),
-            previousEaseFactor,
-            previousInterval,
-            repetitions,
+            previousEaseFactor: Number(previousEaseFactor),
+            previousInterval: Number(previousInterval),
+            repetitions: Number(repetitions),
           },
           { merge: true }
         );
