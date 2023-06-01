@@ -31,20 +31,56 @@ export default functions.firestore
 
       // Update users
       usersSnapshot.forEach(async (doc) => {
-        const { classId, userName, userNotificationTokenId } =
-          doc.data();
+        const { classId, userName, userNotificationTokenId } = doc.data();
         logInfo(`${classId}, ${userName}, ${userNotificationTokenId}`);
 
         // Add quizz on user sc
         // Todo : use doc.ref to update user
+        // Todo: set tokenId from user not from. Need to destructure data from quizz
         await db
           .collection('users')
           .doc(userNotificationTokenId)
           .collection('todoQuizz')
           .doc(quizzName)
-          .set(data!, { merge: true });
+          .set(todoQuizData(data, userNotificationTokenId), { merge: true });
       });
     } catch (e) {
       logInfo(`Error in endpoint fn "on Quizz created" ${e}`);
     }
   });
+
+function todoQuizData(
+  data: admin.firestore.DocumentData,
+  tokenId: string
+): Object {
+  const {
+    quizzName,
+    image,
+    classId,
+    quizzId,
+    nextStudyDay,
+    lastStudyDay,
+    numberOfQuestions,
+    studySessions,
+    calendar,
+    repetitions,
+    previousInterval,
+    previousEaseFactor,
+  } = data;
+  const returnData = {
+    quizzName,
+    image,
+    classId,
+    userNotificationTokenId: tokenId,
+    quizzId,
+    nextStudyDay,
+    lastStudyDay,
+    numberOfQuestions: numberOfQuestions ?? 0,
+    studySessions,
+    calendar,
+    repetitions,
+    previousInterval,
+    previousEaseFactor,
+  };
+  return returnData;
+}
