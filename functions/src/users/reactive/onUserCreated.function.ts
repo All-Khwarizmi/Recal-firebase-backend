@@ -43,8 +43,13 @@ export default functions.firestore
           nextStudyDay,
           numberOfQuestions,
           studySessions,
+          previousEaseFactor,
+          previousInterval,
+          repetitions,
+          userNotificationTokenId,
           quizzName,
         } = doc.data();
+
         userSnapshot.ref.collection('todoQuizz').doc(quizzName).set({
           classId,
           quizzId,
@@ -52,6 +57,10 @@ export default functions.firestore
           lastStudyDay,
           nextStudyDay,
           numberOfQuestions,
+          previousEaseFactor,
+          previousInterval,
+          repetitions,
+          userNotificationTokenId,
           studySessions,
           quizzName,
           calendar: calendar(),
